@@ -1,0 +1,613 @@
+/*
+   VARIÁVEIS E RESET
+*/
+:root {
+  --vermelho: #dc0a2d;
+  --vermelho-escuro: #a00720;
+  --fundo: #f4f1ea;
+  --branco: #ffffff;
+  --texto: #222222;
+  --cinza: #6b6b6b;
+  --raio: 14px;
+  --sombra: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Garante que o atributo hidden sempre esconda o elemento */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  font-family: "Nunito", Arial, sans-serif;
+  background-color: var(--fundo);
+  color: var(--texto);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.sem-rolagem {
+  overflow: hidden;
+}
+
+/*
+   CABEÇALHO (estilo Pokédex)
+*/
+.topo {
+  background-color: var(--vermelho);
+  color: var(--branco);
+  border-bottom: 8px solid #222;
+  padding: 24px 20px;
+}
+
+.topo-conteudo {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.luzes {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.luz-grande {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #9be7ff, #1f8fff 60%, #0b5bb5);
+  border: 5px solid var(--branco);
+  box-shadow: 0 0 0 3px #222;
+}
+
+.luz {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #222;
+}
+
+.luz.vermelha { background-color: #ff4d4d; }
+.luz.amarela  { background-color: #ffd93b; }
+.luz.verde    { background-color: #4cd964; }
+
+.topo h1 {
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  text-shadow: 3px 3px 0 var(--vermelho-escuro);
+  margin-bottom: 8px;
+}
+
+.subtitulo {
+  opacity: 0.9;
+}
+
+/*
+   CONTEÚDO PRINCIPAL
+*/
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+  flex: 1;
+}
+
+.sobre {
+  background-color: var(--branco);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  border-left: 6px solid var(--vermelho);
+}
+
+.sobre h2 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+/* Busca */
+.busca {
+  margin-bottom: 20px;
+}
+
+.busca label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.busca input {
+  width: 100%;
+  max-width: 480px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid #d6d1c4;
+  border-radius: 999px;
+  background-color: var(--branco);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.busca input:focus {
+  border-color: var(--vermelho);
+}
+
+.info-busca {
+  font-size: 0.9rem;
+  color: var(--cinza);
+  margin-top: 6px;
+  min-height: 1.35em;
+}
+
+/*
+   MENSAGENS (carregando / erro)
+*/
+.mensagem {
+  text-align: center;
+  font-weight: 600;
+  color: var(--cinza);
+  margin: 16px 0;
+}
+
+.mensagem:empty {
+  display: none;
+}
+
+/* Pokébola girando enquanto carrega */
+.mensagem-carregando::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  border: 3px solid #222;
+  background: linear-gradient(to bottom, var(--vermelho) 0 45%, #222 45% 55%, var(--branco) 55% 100%);
+  animation: girar 0.9s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+.mensagem-erro {
+  background-color: #fde8e8;
+  color: var(--vermelho-escuro);
+  border: 1px solid #f5b5b5;
+  border-radius: var(--raio);
+  padding: 16px;
+}
+
+.mensagem-erro .btn {
+  margin-top: 10px;
+}
+
+/*
+   GRID DE CARDS
+*/
+.grid-cards {
+  display: grid;
+  /* auto-fill cria quantas colunas couberem: 1 ou 2 no celular, 4 ou 5 no desktop */
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+/*
+   CARD
+*/
+.card {
+  --cor-tipo: #a8a77a; /* cor padrão, trocada pela classe do tipo */
+  position: relative;
+  background-color: var(--branco);
+  border-radius: var(--raio);
+  border-top: 6px solid var(--cor-tipo);
+  box-shadow: var(--sombra);
+  padding: 14px 14px 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: aparecer 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--vermelho);
+  outline-offset: 3px;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-numero {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--cinza);
+}
+
+.card-nome {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 18px 0 10px;
+}
+
+.card-img-box {
+  background-color: #f2f2f2; /* fallback para navegadores sem color-mix */
+  background-color: color-mix(in srgb, var(--cor-tipo) 22%, white);
+  border-radius: 10px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.card-img-box img {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+}
+
+.card-tipos {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.card-medidas {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--cinza);
+}
+
+/* Botão de favorito (coração) */
+.btn-favorito {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #cfcfcf;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.15s, color 0.15s;
+}
+
+.btn-favorito:hover {
+  transform: scale(1.2);
+}
+
+.btn-favorito.ativo {
+  color: var(--vermelho);
+}
+
+/*
+   BADGES DE TIPO
+*/
+.badge {
+  background-color: var(--cor-tipo);
+  color: var(--branco);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+
+/* Cores de cada tipo (usadas no card, no badge e no modal) */
+.tipo-normal   { --cor-tipo: #a8a77a; }
+.tipo-fire     { --cor-tipo: #ee8130; }
+.tipo-water    { --cor-tipo: #6390f0; }
+.tipo-electric { --cor-tipo: #f7d02c; }
+.tipo-grass    { --cor-tipo: #7ac74c; }
+.tipo-ice      { --cor-tipo: #96d9d6; }
+.tipo-fighting { --cor-tipo: #c22e28; }
+.tipo-poison   { --cor-tipo: #a33ea1; }
+.tipo-ground   { --cor-tipo: #e2bf65; }
+.tipo-flying   { --cor-tipo: #a98ff3; }
+.tipo-psychic  { --cor-tipo: #f95587; }
+.tipo-bug      { --cor-tipo: #a6b91a; }
+.tipo-rock     { --cor-tipo: #b6a136; }
+.tipo-ghost    { --cor-tipo: #735797; }
+.tipo-dragon   { --cor-tipo: #6f35fc; }
+.tipo-dark     { --cor-tipo: #705746; }
+.tipo-steel    { --cor-tipo: #b7b7ce; }
+.tipo-fairy    { --cor-tipo: #d685ad; }
+
+/* Tipos com cor clara ficam com texto escuro para dar leitura */
+.badge.tipo-electric,
+.badge.tipo-ice,
+.badge.tipo-ground,
+.badge.tipo-steel {
+  color: #222;
+}
+
+/*
+   BOTÕES
+*/
+.acoes {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.btn {
+  background-color: var(--vermelho);
+  color: var(--branco);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--vermelho-escuro);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--vermelho-escuro);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/*
+   MODAL DE DETALHES
+*/
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal-caixa {
+  position: relative;
+  background-color: var(--branco);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: abrirModal 0.25s ease;
+}
+
+@keyframes abrirModal {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-fechar {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: var(--branco);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: var(--sombra);
+}
+
+.modal-topo {
+  --cor-tipo: #a8a77a;
+  background-color: color-mix(in srgb, var(--cor-tipo) 30%, white);
+  border-radius: 18px 18px 0 0;
+  padding: 24px 20px 10px;
+  text-align: center;
+}
+
+.modal-topo img {
+  width: 220px;
+  max-width: 70%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.modal-numero {
+  font-weight: 800;
+  color: var(--cinza);
+}
+
+.modal-corpo {
+  padding: 16px 24px 24px;
+}
+
+.modal-titulo-linha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-titulo-linha h2 {
+  font-size: 1.6rem;
+}
+
+/* No modal o coração não fica absoluto, fica ao lado do nome */
+.modal-titulo-linha .btn-favorito {
+  position: static;
+}
+
+.modal-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.modal-info div {
+  background-color: var(--fundo);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.modal-info span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--cinza);
+}
+
+.modal-info strong {
+  font-size: 1.05rem;
+}
+
+.modal-corpo h3 {
+  font-size: 1rem;
+  margin: 16px 0 8px;
+}
+
+.modal-habilidades {
+  text-transform: capitalize;
+  color: var(--cinza);
+}
+
+/* Barras de status base */
+.stat {
+  display: grid;
+  grid-template-columns: 95px 36px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.stat-valor {
+  font-weight: 800;
+  text-align: right;
+}
+
+.stat-barra {
+  background-color: #eee;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.stat-preenchimento {
+  height: 100%;
+  background-color: var(--vermelho);
+  border-radius: 999px;
+}
+
+/*
+   RODAPÉ
+*/
+.rodape {
+  background-color: #222;
+  color: #ddd;
+  text-align: center;
+  padding: 18px 20px;
+  font-size: 0.9rem;
+}
+
+.rodape a {
+  color: #ffd93b;
+}
+
+/*
+   RESPONSIVIDADE
+*/
+@media (max-width: 600px) {
+  .topo {
+    padding: 18px 16px;
+  }
+
+  .topo-conteudo {
+    gap: 14px;
+  }
+
+  .luz-grande {
+    width: 44px;
+    height: 44px;
+    border-width: 3px;
+  }
+
+  .luz {
+    width: 11px;
+    height: 11px;
+  }
+
+  .container {
+    padding: 20px 14px 32px;
+  }
+
+  /* 2 colunas no celular */
+  .grid-cards {
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    padding: 12px 10px 14px;
+  }
+
+  .card-nome {
+    font-size: 1rem;
+  }
+
+  .card-medidas {
+    font-size: 0.78rem;
+  }
+
+  .modal-corpo {
+    padding: 14px 16px 20px;
+  }
+
+  .stat {
+    grid-template-columns: 85px 32px 1fr;
+    font-size: 0.85rem;
+  }
+}
+
+/* Respeita quem prefere menos animação no sistema */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

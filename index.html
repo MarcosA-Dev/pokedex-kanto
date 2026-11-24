@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokédex Kanto | Trabalho Front-End</title>
+
+  <!-- Fontes do Google Fonts: uma "pixelada" para o título e uma simples para o texto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Cabeçalho inspirado na Pokédex do anime -->
+  <header class="topo">
+    <div class="topo-conteudo">
+      <div class="luzes" aria-hidden="true">
+        <span class="luz-grande"></span>
+        <span class="luz vermelha"></span>
+        <span class="luz amarela"></span>
+        <span class="luz verde"></span>
+      </div>
+      <div>
+        <h1>Pokédex Kanto</h1>
+        <p class="subtitulo">Os 151 Pokémon originais do anime de 1997</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="sobre">
+      <h2>Sobre o projeto</h2>
+      <p>
+        Esta página consome dados em tempo real da <strong>PokéAPI</strong> e monta os cards
+        dos Pokémon da 1ª geração usando JavaScript. Clique em um card para ver mais detalhes
+        e no coração para salvar seus favoritos.
+      </p>
+    </section>
+
+    <section class="busca">
+      <label for="campo-busca">Buscar Pokémon</label>
+      <input type="search" id="campo-busca" placeholder="Digite um nome ou número (ex: pikachu ou 25)" autocomplete="off">
+      <p id="info-busca" class="info-busca"></p>
+    </section>
+
+    <!-- Mensagens de carregamento e erro (o texto é colocado pelo JS) -->
+    <div id="mensagem" class="mensagem" role="status" aria-live="polite"></div>
+
+    <!-- Área dos cards: fica vazia no HTML, todos os cards são criados pelo script.js -->
+    <section id="lista-cards" class="grid-cards" aria-label="Lista de Pokémon"></section>
+
+    <div class="acoes">
+      <button type="button" id="btn-carregar" class="btn" hidden>Carregar mais</button>
+    </div>
+
+  </main>
+
+  <!-- Modal de detalhes: só a "moldura" fica aqui, o conteúdo é montado pelo JS -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+      <button type="button" id="modal-fechar" class="modal-fechar" aria-label="Fechar detalhes">&times;</button>
+      <div id="modal-conteudo"></div>
+    </div>
+  </div>
+
+  <footer class="rodape">
+    <p>
+      Dados fornecidos pela <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>
+      · Trabalho de Web Development Front-End — UniFECAF
+    </p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
